@@ -1,0 +1,28 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+html{
+    height: 100vh;
+    scroll-behavior: smooth;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+    background-color: rgba(27, 62, 97, 0.693);
+}
+.container{
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-right: 50px;
+    padding-left: 50px;
+}
