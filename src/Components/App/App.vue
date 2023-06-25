@@ -1,7 +1,6 @@
 
 <template>
     <div class="container wrapper" >
-import AppFilter from "../AppFilter/AppFilter.vue";
         <div class="app-heading">
         <span>Barcha ko'rilgan kinolar soni : 3</span>
         <span>Sevimli kinolar soni : 0</span>
@@ -10,17 +9,26 @@ import AppFilter from "../AppFilter/AppFilter.vue";
                <SearchPanel/>
                 <AppFilter/>
           </div>
+           <MovieList/>
+           <div class="movie-add">
+                  <h2>Yangi kino qo'shish</h2>
+                  <MovieAddForm/>
+           </div>
     </div>
 </template>
 
 <script>
     import SearchPanel from "@/Components/searchPanel/SearchPanel.vue"
     import AppFilter from "../AppFilter/AppFilter.vue";
+    import MovieList from "../MovieList/MovieList.vue";
+    import MovieAddForm from "../Movie-add-form/Movie-add-form.vue";
 export default {
 
      components:{
     SearchPanel,
-    AppFilter
+    AppFilter,
+    MovieList,
+    MovieAddForm
 } 
 
 }
@@ -49,6 +57,15 @@ export default {
  }
 
  .box-search-panel{
-   margin-bottom: 15px;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   margin-bottom: 35px;
  }
+
+.movie-add{
+   padding: 15px;
+   background-color: rgba(240, 255, 255, 0.736);
+   color:#222
+}
 </style>

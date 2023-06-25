@@ -16,6 +16,7 @@ body{
     height: 100%;
     font-size: 18px;
     font-weight: 400;
+    font-family: "Roboto","Arial",sans-serif;
     color: #fff;
     background-color: rgba(27, 62, 97, 0.693);
 }
