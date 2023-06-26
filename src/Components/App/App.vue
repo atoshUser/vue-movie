@@ -2,17 +2,17 @@
 <template>
     <div class="container wrapper" >
         <div class="app-heading">
-        <span>Barcha ko'rilgan kinolar soni : 3</span>
-        <span>Sevimli kinolar soni : 0</span>
+        <span>Barcha ko'rilgan kinolar soni : {{ movies.length }}</span>
+        <span>Sevimli kinolar soni : {{ movies.filter((item) => item.isLiked).length }}</span>
         </div>
           <div class="box-search-panel app-heading">
                <SearchPanel/>
                 <AppFilter/>
           </div>
-           <MovieList/>
+           <MovieList :movies="movies"/>
            <div class="movie-add">
                   <h2>Yangi kino qo'shish</h2>
-                  <MovieAddForm/>
+                  <MovieAddForm  @createObj="addObjToList" />
            </div>
     </div>
 </template>
@@ -29,7 +29,23 @@ export default {
     AppFilter,
     MovieList,
     MovieAddForm
-} 
+} ,
+
+data(){
+  return{
+     movies:[ 
+      {name:"Abdurahmon",view:580,isLiked:false},
+      {name:"Anora",view:65,isLiked:true},
+      {name:"Elon Mask",view:5000,isLiked:true},
+      {name:"Selena Gomes",view:10000,isLiked:true}
+      ]
+  }
+} ,
+methods : {
+  addObjToList(obj){
+     this.movies.push(obj)
+  }
+}
 
 }
 </script>
