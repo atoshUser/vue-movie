@@ -9,7 +9,7 @@
                <SearchPanel/>
                 <AppFilter/>
           </div>
-           <MovieList :movies="movies"/>
+           <MovieList :movies="movies" :key="movies.id" @clearState="clearHandle" @onChangeState="changeStateLiked"/>
            <div class="movie-add">
                   <h2>Yangi kino qo'shish</h2>
                   <MovieAddForm  @createObj="addObjToList" />
@@ -33,17 +33,25 @@ export default {
 
 data(){
   return{
-     movies:[ 
-      {name:"Abdurahmon",view:580,isLiked:false},
-      {name:"Anora",view:65,isLiked:true},
-      {name:"Elon Mask",view:5000,isLiked:true},
-      {name:"Selena Gomes",view:10000,isLiked:true}
-      ]
+     movies:[  ]
   }
 } ,
 methods : {
   addObjToList(obj){
      this.movies.push(obj)
+  },
+
+  changeStateLiked(id){
+      this.movies.map((obj) => {
+        if (id === obj.id) {
+           return  obj.isLiked = !obj.isLiked
+        }else {
+        return obj
+        }
+      })
+  },
+  clearHandle(id){
+    this.movies = this.movies.filter((item) => (item.id !== id))
   }
 }
 
