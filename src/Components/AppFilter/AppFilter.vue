@@ -14,10 +14,18 @@ export default {
              activeButton:'all'
         }
     },
+    props:{
+       filterState : {
+        type:Function,
+        required:true
+       }
+    },
     methods:{
        changeActiveButton(prop){
-           this.activeButton = prop
-       }    
+           this.activeButton = prop;
+           this.filterState(this.activeButton)
+       },   
+     
     }
 }
 </script>
@@ -40,9 +48,4 @@ export default {
    transition: background-color 0.5s ease, color 0.5s ease, 
     color 0.5s ease;
 }
-
-
-
-
-
 </style>

@@ -6,10 +6,10 @@
         <span>Sevimli kinolar soni : {{ movies.filter((item) => item.isLiked).length }}</span>
         </div>
           <div class="box-search-panel app-heading">
-               <SearchPanel/>
-                <AppFilter/>
+               <SearchPanel :updateState="updateHandler" />
+                <AppFilter  :filterState="filterState" />
           </div>
-           <MovieList :movies="movies" :key="movies.id" @clearState="clearHandle" @onChangeState="changeStateLiked"/>
+           <MovieList :movies="filterList(showData(this.movies,this.data), this.filter)" :key="movies.id" @clearState="clearHandle" @onChangeState="changeStateLiked"/>
            <div class="movie-add">
                   <h2>Yangi kino qo'shish</h2>
                   <MovieAddForm  @createObj="addObjToList" />
@@ -23,8 +23,7 @@
     import MovieList from "../MovieList/MovieList.vue";
     import MovieAddForm from "../Movie-add-form/Movie-add-form.vue";
 export default {
-
-     components:{
+   components:{
     SearchPanel,
     AppFilter,
     MovieList,
@@ -33,7 +32,11 @@ export default {
 
 data(){
   return{
-     movies:[  ]
+     movies:[ 
+      
+      ],
+     data:'',
+     filter:''
   }
 } ,
 methods : {
@@ -50,11 +53,41 @@ methods : {
         }
       })
   },
+
   clearHandle(id){
     this.movies = this.movies.filter((item) => (item.id !== id))
-  }
-}
+  },
 
+    showData(arr,text){
+      console.log(text);
+    if(!text.length){
+      return   this.movies
+    }else {
+      return  arr.filter((item) => item.name.toLowerCase().includes(text.toLowerCase()))
+    }
+    },
+
+  // UpdateStateHandler
+   updateHandler(text){
+      this.data = text
+   },
+   // FILTER lIST
+   filterList(arr,filter){
+      switch(filter){
+         case  "mostView" : 
+         return arr.filter((item) => item.view > 500);
+         case "popular" : 
+         return arr.filter((item) => item.isLiked);
+         default : 
+         return arr
+      }
+   },
+    // change filter state
+  filterState(text){
+    this.filter = text
+  }
+
+}
 }
 </script>
 
