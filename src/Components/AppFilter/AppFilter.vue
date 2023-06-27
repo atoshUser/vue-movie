@@ -1,8 +1,7 @@
 <template>
     <div class="box-change-btn">
-         <button  type="button" @click="changeActiveButton('all')" :class="{active : activeButton === 'all'}">Barcha kinolar</button>
-         <button type="button" @click="changeActiveButton('popular')" :class="{active  : activeButton === 'popular'}">Mashhur kinolar</button>
-         <button type="button" @click="changeActiveButton('mostView')" :class="{active : activeButton === 'mostView'}">Eng ko'p ko'rilgan kinolar</button>
+         <button  type="button" v-for="obj in filterButtons"   :key="obj.title"  @click="changeActiveButton(`${obj.activeBtn}`)" :class="{active : activeButton === `${obj.activeBtn}`}">{{ obj.title }}</button>
+       
     </div>
 </template>
 
@@ -11,7 +10,12 @@
 export default {
     data(){
         return{
-             activeButton:'all'
+             activeButton:'all',
+             filterButtons:[
+                { activeBtn:'all',title:'Barcha kinolar'},
+                { activeBtn:'popular',title:'Mashhur kinolar'},
+                { activeBtn:'mostView',title:"Eng ko'p ko'rilgan kinolar"}
+             ]
         }
     },
     props:{
@@ -22,6 +26,7 @@ export default {
     },
     methods:{
        changeActiveButton(prop){
+          
            this.activeButton = prop;
            this.filterState(this.activeButton)
        },   
