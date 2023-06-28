@@ -1,3 +1,4 @@
 import PrimaryButton from "./PrimaryButton.vue"
-
-export default [PrimaryButton]
+import InputUi from "./InputUi.vue"
+import Loading from "./Loading.vue"
+export default [PrimaryButton,InputUi,Loading]

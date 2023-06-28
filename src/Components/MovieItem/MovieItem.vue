@@ -33,7 +33,11 @@ export default {
         onClick(){
         this.$emit('onLike',this.movie.id)
        }
-    }
+    },
+
+    unmounted() {
+        console.log('Unmount ishga tushdi')
+    },
 }
 </script>
 

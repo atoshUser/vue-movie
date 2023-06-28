@@ -9,7 +9,10 @@
                <SearchPanel :updateState="updateHandler" />
                 <AppFilter  :filterState="filterState" />
           </div>
-           <MovieList :movies="filterList(showData(this.movies,this.data), this.filter)" :key="movies.id" @clearState="clearHandle" @onChangeState="changeStateLiked"/>
+           <div  v-if="this.loading" class="warn">Ma'lumotlar hozirda mavjud emas</div>
+           <MovieList v-else  :movies="filterList(showData(this.movies,this.data), this.filter)" 
+           :key="movies.id" @clearState="clearHandle" @onChangeState="changeStateLiked"/>
+            <Pagination :Total="totalPage" :page="changePage"/>
            <div class="movie-add">
                   <h2>Yangi kino qo'shish</h2>
                   <MovieAddForm  @createObj="addObjToList" />
@@ -22,12 +25,16 @@
     import AppFilter from "../AppFilter/AppFilter.vue";
     import MovieList from "../MovieList/MovieList.vue";
     import MovieAddForm from "../Movie-add-form/Movie-add-form.vue";
+    import Pagination from "@/Components/Pagination/Pagination.vue"
+import axios from "axios";
+ import {v4 as uuidv4} from "uuid"
 export default {
    components:{
     SearchPanel,
     AppFilter,
     MovieList,
-    MovieAddForm
+    MovieAddForm,
+    Pagination
 } ,
 
 data(){
@@ -36,12 +43,31 @@ data(){
       
       ],
      data:'',
-     filter:''
+     filter:'',
+     loading:true,
+     limit:5,
+     page:1,
+     totalPage:0
   }
 } ,
 methods : {
-  addObjToList(obj){
-     this.movies.push(obj)
+
+  async addObjToList(obj){
+    try {
+      const response  = await axios.post(`https://jsonplaceholder.typicode.com/users`,obj)
+      this.movies.push(response.data)
+        console.log(response);
+      //this.movies.push()
+    } catch (error) {
+       alert(error.message)
+    }
+     
+    //  this.movies.push(obj)
+  },
+
+  changePage(num) {
+     console.log(num);
+     this.page = num
   },
 
   changeStateLiked(id){
@@ -54,8 +80,13 @@ methods : {
       })
   },
 
-  clearHandle(id){
-    this.movies = this.movies.filter((item) => (item.id !== id))
+  async clearHandle(id){
+     try {
+       await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+      this.movies = this.movies.filter((item) => (item.id !== id))
+     } catch (error) {
+      alert(error.message)
+     }
   },
 
     showData(arr,text){
@@ -71,7 +102,7 @@ methods : {
    updateHandler(text){
       this.data = text
    },
-   // FILTER lIST
+    // FILTER lIST
    filterList(arr,filter){
       switch(filter){
          case  "mostView" : 
@@ -85,9 +116,71 @@ methods : {
     // change filter state
   filterState(text){
     this.filter = text
+  },
+  mountLog(){
+    console.log('Mount ishga tushdi');
+  },
+  updateLog(){
+  console.log('Update ishga tushdi');
+  },
+  unMountLog(){
+    console.log('Unmounted is working');
+  },
+   
+  
+  async  fetchApi(){
+     try {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/users',{
+           params:{
+            _limit:this.limit,
+            _page:this.page
+          }
+        })
+         console.log(response);
+            const newData = response.data.map((obj) => {
+               return {
+                 name:obj.name,
+                view:obj.id * 125,
+                id:uuidv4()
+               }
+            })
+         this.totalPage = Math.ceil(response.headers['x-total-count'] / this.limit)
+         this.movies = newData
+     } catch (error) {
+        console.log(error.message);
+     }finally{
+       this.loading = false
+     }
+  },
+ 
+   improveTitle(text){
+     if (text.length > 15) {
+       return text.slice(15)
+     }else {
+      return text
+     }
+   }
+  
+},
+ watch:{
+     page(){
+       this.fetchApi()
+     }
+ },
+
+  mounted(){
+    this.mountLog()
+    this.fetchApi()
+  },
+
+
+   updated(){
+     this.updateLog()
+  },
+  unmounted(){
+this.unMountLog()
   }
 
-}
 }
 </script>
 
@@ -101,6 +194,15 @@ methods : {
     padding:50px;
  }
 
+ /* here loading style   */  
+
+ .warn{
+    display: flex;
+    font-size: 30px;
+    font-weight: 500;
+    margin: 100px 0;
+    justify-content: center;
+ }
  .app-heading{
     display: flex;
     flex-direction: column;
